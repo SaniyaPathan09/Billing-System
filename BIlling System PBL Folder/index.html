@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+<body>
+    <div class="flex justify-end">
+        <div class="flex justify-end center-align mt-2 pr-4">
+            <button id="printbtn" style="width: 100px;" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+            Print
+            </button>
+        </div>
+
+        <div class="flex justify-end center-align mt-2 pr-4">
+            <button id="logoutbtn" style="width: 100px;" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+            Logout
+            </button>
+        </div>
+
+    </div>
+  
+    <h2 class="heading text-center mt-6">Billing System</h2>
+
+    <div class="container-fluid">
+
+    <div class="container leftside">
+        <div class="part1">
+            <fieldset>
+                <legend>Personal Information</legend>
+                Full Name: <input type="text" id="name"> <br>
+                Phone No: <input type="text" id="phoneno" maxlength="10" pattern="\d{10}" />
+            </fieldset>
+        </div>
+
+
+        <div class="part2">
+            <fieldset>
+                <legend>Your Orders</legend>
+                <div class="">
+                    <div>
+                    <label for="Item" class="mr-6">Item</label>  
+                    <input type="text" id="item"> 
+                    <!-- <select id="item">
+                        <option value="free">Free</option>
+                        <option value="basic">Basic</option>
+                        <option value="premium">Premium</option>
+                    </select> -->
+                </div>
+                <div>
+                    <label for="Price" class="mr-5">Price</label>  
+                    <input type="text" id="price"><br/>
+                </div>
+                <div>
+                    <label for="Quantity">Quantity</label> 
+                    <input type="text" id="quantity"><br/>
+                </div>
+                </div>
+                
+                                
+                <button onclick="addItem()" id="additem" style="width: 120px;" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Add Item
+                  </button>
+            </fieldset>
+        </div>
+        
+    </div>
+
+    <div class="container rightside" id="billsection">
+        <fieldset>
+            <p class="text-xl font-bold">SSK Bills</p>
+            <p class="text-lg">Name:<span id="name2"></span></p>
+            <p class="text-lg">Phone No: <span id="phoneno2"> </span> </p>
+             <p>Bill Number:<span id="billno"> </span></p>
+            <p>Bill Date: <span id="date"> </span> </p>
+            
+
+            <table class="table-auto" id="table" border="1" >
+                <thead class="border-b bg-gray-800">
+                    <tr><th scope="col" class="text-sm font-medium text-white px-6 py-4">Item</th>
+                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">Price</th>
+                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">Quantity</th>
+                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">Amout</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+
+            </table>
+
+            </fieldset>
+            <div>
+                <p class="flex justify-end text-lg">GST : 18%</p>
+                <p class="flex justify-end text-xl">Total Amout: <span id="amount"></span></p>
+            </div>
+            
+            
+    </div>
+</div>
+<script>
+
+var billno = document.getElementById("billno")
+var date = document.getElementById("date")
+var amount = document.getElementById("amount")
+let printbtn = document.getElementById("printbtn")
+let billsection = document.getElementById("billsection")
+
+
+// bill no
+ billno = Math.floor(1000 + Math.random() * 9000);
+ document.getElementById("billno").innerHTML=billno;
+
+ //date
+ date = new Date().toString().slice(0,21)
+ document.getElementById("date").innerHTML=date;
+
+
+ document.getElementById("phoneno").addEventListener("keyup",function(){
+    // name = document.getElementById("name").value;
+    
+    document.getElementById("phoneno2").innerHTML=this.value;
+});
+
+
+document.getElementById("name").addEventListener("keyup",function(){
+    // name = document.getElementById("name").value;
+    document.getElementById("name2").innerHTML=this.value;
+});
+
+
+// bill total amount
+
+let totalBill = 0;
+
+//table
+const tbody = document.querySelector('tbody')
+function addItem(){
+    const item = document.getElementById("item").value
+    const quantity = document.getElementById("quantity").value
+    const price = document.getElementById("price").value
+
+    totalBill = totalBill + (price*quantity);
+
+
+    tbody.innerHTML += `
+        <tr class="bg-white border-b">
+            <td class="px-6 py-4 whitespace-nowrap text-md font-medium text-gray-900">${item}</td>  
+            <td class="px-6 py-4 whitespace-nowrap text-md font-medium text-gray-900">${price}</td> 
+            <td class="px-6 py-4 whitespace-nowrap text-md font-medium text-gray-900">${quantity}</td> 
+            <td class="px-6 py-4 whitespace-nowrap text-md font-medium text-gray-900">${price*quantity}</td>   
+        </tr>
+    `
+    document.getElementById("item").value = ""
+    document.getElementById("price").value = ""
+    document.getElementById("quantity").value = ""
+    document.getElementById("amount").innerText = totalBill;
+        
+}
+
+printbtn.addEventListener('click', () => {
+    var divContents = billsection.innerHTML;
+            var a = window.open('', '', 'height=800, width=800');
+            a.document.write(divContents);
+            a.print();
+})
+ 
+
+
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+  import { createUserWithEmailAndPassword,signInWithEmailAndPassword, onAuthStateChanged, getAuth, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
+     // Import the functions you need from the SDKs you need
+    
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBgZFcevi_Xt03LE2_nQZEjwZuS1qxsqzY",
+    authDomain: "billing-system1.firebaseapp.com",
+    projectId: "billing-system1",
+    storageBucket: "billing-system1.appspot.com",
+    messagingSenderId: "768530343576",
+    appId: "1:768530343576:web:f7de38b5ffa945261952ed",
+    measurementId: "G-QJHNZYWMBP"
+  };
+
+  // Initialize Firebase
+  const firebase = initializeApp(firebaseConfig);
+
+  const auth = getAuth()
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        location.href="./login.html";
+    } 
+  });
+
+  let logoutbtn = document.getElementById("logoutbtn")
+
+  logoutbtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+        location.href="./signup.html";
+    }).catch((error) => { 
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(errorMessage+" "+errorCode)
+        });
+  })
+  </script>
+</body>
+</html>
